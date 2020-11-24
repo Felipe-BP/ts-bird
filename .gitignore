@@ -1,4 +1,6 @@
 .build
 build
+dist
+.dist
 web_modules
 node_modules

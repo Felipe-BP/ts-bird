@@ -1,11 +1,6 @@
-/**
- * This file is just a silly example to show everything working in the browser.
- * When you're ready to start on your site, clear the file. Happy hacking!
- **/
+import DomRender from './utils/dom-render.util';
+import Canvas from './components/Canvas';
 
-import confetti from 'canvas-confetti';
+const CanvasElem = new Canvas();
 
-confetti.create(document.getElementById('canvas') as HTMLCanvasElement, {
-  resize: true,
-  useWorker: true,
-})({ particleCount: 200, spread: 200 });
+DomRender.render(CanvasElem.elem(), document.getElementById('app'));

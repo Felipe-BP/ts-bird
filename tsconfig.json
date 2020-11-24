@@ -5,7 +5,7 @@
     ],
     "exclude": [
         "node_modules/*/**",
-        "./dist"
+        "dist"
     ],
     "compilerOptions": {
         "module": "esnext",
@@ -35,8 +35,8 @@
             ]
         },
         /* Redirect output structure to the directory. */
-        "outDir": "./dist",
+        "outDir": "dist",
         /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-        "rootDir": "./src",
+        "rootDir": "src",
     }
 }

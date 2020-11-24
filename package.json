@@ -1,20 +1,27 @@
 {
-  "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
-    "test": "echo \"This template does not include a test runner by default.\" && exit 1",
-    "format": "prettier --write \"src/**/*.{ts,js}\"",
-    "lint": "prettier --check \"src/**/*.{ts,js}\""
-  },
-  "dependencies": {
-    "canvas-confetti": "^1.2.0"
-  },
-  "devDependencies": {
-    "@snowpack/plugin-typescript": "^1.1.0",
-    "@types/canvas-confetti": "^1.0.0",
-    "@types/snowpack-env": "^2.3.2",
-    "prettier": "^2.0.5",
-    "snowpack": "^2.17.1",
-    "typescript": "^4.0.0"
-  }
+    "name": "ts-bird",
+    "version": "1.0.0",
+    "description": "This project has the goal to create a flappy bird game with typescript <3;",
+    "main": "index.js",
+    "scripts": {
+        "start": "snowpack dev",
+        "build": "snowpack build",
+        "test": "echo \"This template does not include a test runner by default.\" && exit 1",
+        "format": "prettier --write \"src/**/*.{ts,js}\"",
+        "lint": "eslint '*/**/*.{js,ts}' --quiet --fix"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@snowpack/plugin-typescript": "^1.1.0",
+        "@types/canvas-confetti": "^1.0.0",
+        "@types/snowpack-env": "^2.3.2",
+        "@typescript-eslint/eslint-plugin": "^4.8.2",
+        "@typescript-eslint/parser": "^4.8.2",
+        "eslint": "^7.14.0",
+        "eslint-config-prettier": "^6.15.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "prettier": "^2.2.0",
+        "snowpack": "^2.17.1",
+        "typescript": "^4.0.0"
+    }
 }

@@ -9,7 +9,9 @@ export default class Canvas extends Component {
 
     constructor() {
         super(
-            document.createElement('canvas'),
+            `
+                <canvas class="game-container"></canvas>
+            `,
             '/_dist_/components/Canvas/index.css', // TODO resolve this path
         );
         this.setCanvasSize(288, 512); // TODO provide with css variables

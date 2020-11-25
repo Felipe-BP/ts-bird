@@ -1,7 +1,9 @@
+import DomRender from '../../utils/dom-render.util';
+
 export default abstract class Component {
     private _elem: Node | undefined;
-    constructor(elem: Node, stylePath?: string) {
-        this._elem = elem;
+    constructor(template: string, stylePath?: string) {
+        this._elem = DomRender.createComponent(template);
         if (stylePath) {
             this.applyStyle(stylePath);
         }
@@ -10,7 +12,7 @@ export default abstract class Component {
         return this._elem as T;
     }
     applyStyle(stylePath: string): void {
-        const [head] = document.getElementsByTagName('HEAD');
+        const [head] = document.getElementsByTagName('head');
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';

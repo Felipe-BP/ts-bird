@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "This project has the goal to create a flappy bird game with typescript <3;",
     "main": "index.js",
+    "license": "MIT",
     "scripts": {
         "start": "snowpack dev",
         "build": "snowpack build",

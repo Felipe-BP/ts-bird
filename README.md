@@ -1,24 +1,40 @@
-# New Project
+# TS-Bird
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+<p align="center">
+  <a href="https://www.typescriptlang.org" target="blank"><img src="https://cdn.iconscout.com/icon/free/png-512/typescript-1174965.png" width="110" alt="Typescript logo" /></a>
+  <a href="https://www.snowpack.dev" target="blank" style="margin-left: 10px;"><img src="https://www.snowpack.dev/assets/snowpack-logo-dark.png" width="110" alt="Snowpack logo" /></a>
+</p>  
 
-## Available Scripts
+<h3 align="center">
+  This project has the goal to create a flappy bird game with Typescript, because I love Typescript !
+  :cupid: :rocket:
+</h3>
 
-### npm start
+## Installation
 
-Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+Use the package manager [npm](https://www.npmjs.com) or [yarn](https://yarnpkg.com) to install dependencies.
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
+```bash
+npm install
 
-### npm run build
+or
 
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
+yarn install
+```
 
-**For the best production performance:** Add a build bundler plugin like [@snowpack/plugin-webpack](https://github.com/snowpackjs/snowpack/tree/master/plugins/plugin-webpack) or [snowpack-plugin-rollup-bundle](https://github.com/ParamagicDev/snowpack-plugin-rollup-bundle) to your `snowpack.config.json` config file.
+## Running
 
-### Q: What about Eject?
+By default, snowpack server will run on http://localhost:8080.
 
-No eject needed! Snowpack guarantees zero lock-in, and CSA strives for the same.
+```bash
+npm run start
+
+or
+
+yarn start
+```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please check out [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) to follow project commit messages design

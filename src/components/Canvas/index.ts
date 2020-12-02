@@ -1,9 +1,10 @@
 import Component from '../Component';
 
-import BackgroundDay from '../../assets/sprites/background-day.png';
+import Background from '../../assets/sprites/background-night.png';
 import { ScreenController } from '../ScreenControl';
 import type { TSBird } from '../TS-Bird';
 import type { Base } from '../Base';
+import { FrameRateUtil } from '../../utils/frame-rate.util';
 
 export default class Canvas extends Component {
     private _ctx: CanvasRenderingContext2D | null;
@@ -27,12 +28,13 @@ export default class Canvas extends Component {
         this.screenController.getControl()?.render();
 
         requestAnimationFrame(this.drawComponents.bind(this));
+        FrameRateUtil.updateFrame();
     }
 
     private async renderBackground() {
         const { width, height } = this.elem<HTMLCanvasElement>();
         const background = new Image(width, height);
-        background.src = BackgroundDay;
+        background.src = Background;
         return new Promise((resolve) => {
             background.onload = () => {
                 resolve(

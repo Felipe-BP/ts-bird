@@ -1,28 +1,30 @@
 import Component from '../Component';
 
 import BackgroundDay from '../../assets/sprites/background-day.png';
-import type { RenderedComponent } from '../../interfaces/rendered-component.interface';
+import { ScreenController } from '../ScreenControl';
+import type { TSBird } from '../TS-Bird';
+import type { Base } from '../Base';
 
 export default class Canvas extends Component {
     private _ctx: CanvasRenderingContext2D | null;
-    private components: RenderedComponent[];
+    private screenController: ScreenController;
 
-    constructor(...needToDraw: RenderedComponent[]) {
+    constructor(bird: TSBird, base: Base) {
         super(
             `
                 <canvas class="game-container"></canvas>
             `,
             '/_dist_/components/Canvas/index.css', // TODO resolve this path
         );
-        this.components = needToDraw;
-        this.setCanvasSize(288, 512); // TODO provide with css variables
         this._ctx = this.elem<HTMLCanvasElement>().getContext('2d');
-        this.renderBackground();
+        this.screenController = new ScreenController(this._ctx, bird, base);
+        this.setCanvasSize(288, 512);
         this.drawComponents();
     }
 
     private async drawComponents() {
-        this.components.forEach((component) => component.render(this._ctx));
+        this.renderBackground();
+        this.screenController.getControl()?.render();
 
         requestAnimationFrame(this.drawComponents.bind(this));
     }

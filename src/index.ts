@@ -6,6 +6,6 @@ import { TSBird } from './components/TS-Bird';
 
 const base = new Base();
 const bird = new TSBird();
-const CanvasElem = new Canvas(base, bird);
+const CanvasElem = new Canvas(bird, base);
 
 DomRender.render(CanvasElem.elem(), document.getElementById('app'));

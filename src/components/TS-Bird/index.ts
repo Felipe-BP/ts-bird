@@ -16,33 +16,44 @@ export class TSBird implements RenderedComponent {
         destH: 24,
     };
     private _state: ObjectState = this.DEFAULT_STATE;
+    private gravity = 0.25;
+    private velocity = 1;
 
     get state(): ObjectState {
         return this._state;
     }
 
     render(ctx: CanvasRenderingContext2D | null): void {
+        if (this.state.image) {
+            return this.drawOnCanvas(ctx);
+        }
         const birdImage = new Image();
         birdImage.src = YellowBird;
         new Promise((resolve) => {
             birdImage.onload = () => {
-                resolve(
-                    ctx?.drawImage(
-                        birdImage,
-                        this.state.sourceX,
-                        this.state.sourceY,
-                        this.state.sourceW,
-                        this.state.sourceH,
-                        this.state.destX,
-                        this.state.destY,
-                        this.state.destW,
-                        this.state.destH,
-                    ),
-                );
+                this.state.image = birdImage;
+                resolve(this.drawOnCanvas(ctx));
             };
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    update(): void {}
+    drawOnCanvas(ctx: CanvasRenderingContext2D | null): void {
+        return ctx?.drawImage(
+            this.state.image as CanvasImageSource,
+            this.state.sourceX,
+            this.state.sourceY,
+            this.state.sourceW,
+            this.state.sourceH,
+            this.state.destX,
+            this.state.destY, // TODO get way to get from canvas height
+            this.state.destW,
+            this.state.destH,
+        );
+    }
+
+    update(): void {
+        this.velocity += this.gravity;
+
+        this.state.destY += this.velocity;
+    }
 }

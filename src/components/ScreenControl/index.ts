@@ -95,14 +95,17 @@ export class GameScreen extends GameController {
     }
 
     click(): void {
-        throw new Error('method not implemented!');
+        this.screenController.bird.jump();
     }
 
     update(): void {
-        throw new Error('method not implemented!');
+        this.screenController.base.update();
+        this.screenController.bird.update();
     }
 
     render(): void {
-        throw new Error('method not implemented!');
+        this.update();
+        this.screenController.bird.render(this.screenController._ctx);
+        this.screenController.base.render(this.screenController._ctx);
     }
 }

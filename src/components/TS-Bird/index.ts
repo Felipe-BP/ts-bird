@@ -80,6 +80,10 @@ export class TSBird implements RenderedComponent {
         );
     }
 
+    jump(): void {
+        this.velocity -= 4.5;
+    }
+
     update(): void {
         this.velocity += this.gravity;
 

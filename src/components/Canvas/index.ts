@@ -2,9 +2,10 @@ import Component from '../Component';
 
 import Background from '../../assets/sprites/background-night.png';
 import { ScreenController } from '../ScreenControl';
+import { FrameRateUtil } from '../../utils/frame-rate.util';
+
 import type { TSBird } from '../TS-Bird';
 import type { Base } from '../Base';
-import { FrameRateUtil } from '../../utils/frame-rate.util';
 
 export default class Canvas extends Component {
     private _ctx: CanvasRenderingContext2D | null;
@@ -19,8 +20,14 @@ export default class Canvas extends Component {
         );
         this._ctx = this.elem<HTMLCanvasElement>().getContext('2d');
         this.screenController = new ScreenController(this._ctx, bird, base);
+        this.bindCanvasClick();
         this.setCanvasSize(288, 512);
         this.drawComponents();
+    }
+
+    private bindCanvasClick() {
+        this.elem<HTMLCanvasElement>().onclick = () =>
+            this.screenController.getControl()?.click();
     }
 
     private async drawComponents() {

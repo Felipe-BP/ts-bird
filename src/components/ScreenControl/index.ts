@@ -1,3 +1,4 @@
+import { CollisionEvents, CollisionUtil } from '../../utils/collision.util';
 import type { Base } from '../Base';
 import type { TSBird } from '../TS-Bird';
 
@@ -12,6 +13,14 @@ abstract class GameController {
 
     constructor(screenController: ScreenController) {
         this.screenController = screenController;
+
+        CollisionUtil.applyCollision(CollisionEvents.BIRD_BASE, () => {
+            const birdBase =
+                this.screenController.bird.state.destY +
+                this.screenController.bird.state.destH;
+
+            return birdBase >= 512 - this.screenController.base.state.destH;
+        });
     }
 
     abstract click(): void;
@@ -92,6 +101,11 @@ export class StartScreen extends GameController {
 export class GameScreen extends GameController {
     constructor(screenController: ScreenController) {
         super(screenController);
+
+        CollisionUtil._collision$.subscribe(() => {
+            this.screenController.bird.resetState();
+            this.screenController.changeScreen(Screens.START);
+        });
     }
 
     click(): void {
@@ -104,6 +118,7 @@ export class GameScreen extends GameController {
     }
 
     render(): void {
+        CollisionUtil.detectCollision();
         this.update();
         this.screenController.bird.render(this.screenController._ctx);
         this.screenController.base.render(this.screenController._ctx);

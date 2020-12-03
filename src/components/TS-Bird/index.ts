@@ -7,9 +7,11 @@ import BlueBirdUp from '../../assets/sprites/bluebird-upflap.png';
 import BlueBirdMid from '../../assets/sprites/bluebird-midflap.png';
 import BlueBirdDown from '../../assets/sprites/bluebird-downflap.png';
 
-type BirdState = ObjectState & { birdFlapStates: Array<string> };
+type BirdState =
+    | Record<string, never>
+    | (ObjectState & { birdFlapStates: Array<string> });
 export class TSBird implements RenderedComponent {
-    DEFAULT_STATE: BirdState = {
+    private static DEFAULT_STATE: Readonly<BirdState> = {
         image: null,
         sourceX: 0,
         sourceY: 0,
@@ -21,17 +23,28 @@ export class TSBird implements RenderedComponent {
         destH: 24,
         birdFlapStates: [BlueBirdMid, BlueBirdDown, BlueBirdUp],
     };
-    private _state: BirdState = this.DEFAULT_STATE;
+    private _state: BirdState = {};
     private gravity = 0.25;
     private velocity = 1;
 
-    get state(): BirdState {
+    constructor() {
+        this.resetState();
+    }
+
+    get state(): Readonly<BirdState> {
         return this._state;
+    }
+
+    resetState(): void {
+        Object.keys(TSBird.DEFAULT_STATE).forEach((key) => {
+            this._state[key] = TSBird.DEFAULT_STATE[key];
+        });
+        this.velocity = 1;
     }
 
     async render(ctx: CanvasRenderingContext2D | null): Promise<void> {
         if (this.state.image) {
-            this.state.image = await this.getBirdFlapImage();
+            this._state.image = await this.getBirdFlapImage();
             return this.drawOnCanvas(ctx);
         }
 
@@ -39,7 +52,7 @@ export class TSBird implements RenderedComponent {
         birdImage.src = BlueBirdMid;
         new Promise((resolve) => {
             birdImage.onload = () => {
-                this.state.image = birdImage;
+                this._state.image = birdImage;
                 resolve(this.drawOnCanvas(ctx));
             };
         });
@@ -87,6 +100,6 @@ export class TSBird implements RenderedComponent {
     update(): void {
         this.velocity += this.gravity;
 
-        this.state.destY += this.velocity;
+        this._state.destY += this.velocity;
     }
 }

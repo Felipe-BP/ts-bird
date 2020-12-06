@@ -6,12 +6,13 @@ import { FrameRateUtil } from '../../utils/frame-rate.util';
 
 import type { TSBird } from '../TS-Bird';
 import type { Base } from '../Base';
+import type { Pipe } from '../Pipe';
 
 export default class Canvas extends Component {
     private _ctx: CanvasRenderingContext2D | null;
     private screenController: ScreenController;
 
-    constructor(bird: TSBird, base: Base) {
+    constructor(bird: TSBird, base: Base, pipe: Pipe) {
         super(
             `
                 <canvas class="game-container"></canvas>
@@ -19,7 +20,12 @@ export default class Canvas extends Component {
             '/_dist_/components/Canvas/index.css', // TODO resolve this path
         );
         this._ctx = this.elem<HTMLCanvasElement>().getContext('2d');
-        this.screenController = new ScreenController(this._ctx, bird, base);
+        this.screenController = new ScreenController(
+            this._ctx,
+            bird,
+            base,
+            pipe,
+        );
         this.bindCanvasClick();
         this.setCanvasSize(288, 512);
         this.drawComponents();

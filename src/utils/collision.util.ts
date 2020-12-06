@@ -14,7 +14,10 @@ export abstract class CollisionUtil {
     >();
     public static _collision$ = new Subject<CollisionEvents>();
 
-    static applyCollision(event: CollisionEvents, fn: CollisionFunction): void {
+    static applyCollisionDetector(
+        event: CollisionEvents,
+        fn: CollisionFunction,
+    ): void {
         if (!CollisionUtil._collisionMap.has(event)) {
             CollisionUtil._collisionMap.set(event, fn);
         }

@@ -1,11 +1,11 @@
 import { CollisionEvents, CollisionUtil } from '../../utils/collision.util';
 import type { Base } from '../Base';
+import type { Pipe } from '../Pipe';
 import type { TSBird } from '../TS-Bird';
 
 export enum Screens {
     START = 'START',
     GAME = 'GAME',
-    DIE = 'DIE',
 }
 
 abstract class GameController {
@@ -14,12 +14,37 @@ abstract class GameController {
     constructor(screenController: ScreenController) {
         this.screenController = screenController;
 
-        CollisionUtil.applyCollision(CollisionEvents.BIRD_BASE, () => {
+        CollisionUtil.applyCollisionDetector(CollisionEvents.BIRD_BASE, () => {
             const birdBase =
                 this.screenController.bird.state.destY +
                 this.screenController.bird.state.destH;
 
             return birdBase >= 512 - this.screenController.base.state.destH;
+        });
+
+        CollisionUtil.applyCollisionDetector(CollisionEvents.BIRD_PIPE, () => {
+            const birdX = this.screenController.bird.state.destX;
+            const birdHead = this.screenController.bird.state.destY;
+            const birdBase = birdHead + this.screenController.bird.state.destH;
+
+            let collision = false;
+            if (this.screenController.pipe.state.pipes) {
+                for (const pipe of this.screenController.pipe.state.pipes) {
+                    const pipeBaseY =
+                        pipe.y +
+                        this.screenController.pipe.state.destH +
+                        this.screenController.pipe.state.offset;
+
+                    if (birdX >= pipe.x) {
+                        if (birdHead <= -pipe.y || birdBase >= pipeBaseY) {
+                            collision = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return collision;
         });
     }
 
@@ -34,11 +59,13 @@ export class ScreenController {
     public _ctx: Readonly<CanvasRenderingContext2D | null>;
     public base: Readonly<Base>;
     public bird: Readonly<TSBird>;
+    public pipe: Readonly<Pipe>;
 
     constructor(
         context: CanvasRenderingContext2D | null,
         bird: TSBird,
         base: Base,
+        pipe: Pipe,
     ) {
         for (const screen of Object.values(Screens)) {
             this.gameStateMap.set(screen, this.factoryGameController(screen));
@@ -46,6 +73,7 @@ export class ScreenController {
         this._ctx = context;
         this.bird = bird;
         this.base = base;
+        this.pipe = pipe;
     }
 
     private factoryGameController(screen: Screens): GameController {
@@ -104,6 +132,7 @@ export class GameScreen extends GameController {
 
         CollisionUtil._collision$.subscribe(() => {
             this.screenController.bird.resetState();
+            this.screenController.pipe.resetState();
             this.screenController.changeScreen(Screens.START);
         });
     }
@@ -113,6 +142,7 @@ export class GameScreen extends GameController {
     }
 
     update(): void {
+        this.screenController.pipe.update();
         this.screenController.base.update();
         this.screenController.bird.update();
     }
@@ -121,6 +151,7 @@ export class GameScreen extends GameController {
         CollisionUtil.detectCollision();
         this.update();
         this.screenController.bird.render(this.screenController._ctx);
+        this.screenController.pipe.render(this.screenController._ctx);
         this.screenController.base.render(this.screenController._ctx);
     }
 }

@@ -1,7 +1,8 @@
+import { ObjectUtil } from '../../utils/object.util';
+import { FrameRateUtil } from '../../utils/frame-rate.util';
+
 import type { ObjectState } from '../../interfaces/object-state.interface';
 import type { RenderedComponent } from '../../interfaces/rendered-component.interface';
-
-import { FrameRateUtil } from '../../utils/frame-rate.util';
 
 import BlueBirdUp from '../../assets/sprites/bluebird-upflap.png';
 import BlueBirdMid from '../../assets/sprites/bluebird-midflap.png';
@@ -36,9 +37,10 @@ export class TSBird implements RenderedComponent {
     }
 
     resetState(): void {
-        Object.keys(TSBird.DEFAULT_STATE).forEach((key) => {
-            this._state[key] = TSBird.DEFAULT_STATE[key];
-        });
+        ObjectUtil.copyTo(
+            this._state as Record<string, never>,
+            TSBird.DEFAULT_STATE as Record<string, never>,
+        );
         this.velocity = 1;
     }
 

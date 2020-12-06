@@ -1,10 +1,14 @@
+import { ObjectUtil } from '../../utils/object.util';
+
 import type { ObjectState } from '../../interfaces/object-state.interface';
 import type { RenderedComponent } from '../../interfaces/rendered-component.interface';
 
 import BaseImage from '../../assets/sprites/base.png';
 
+type BaseState = Record<string, never> | ObjectState;
+
 export class Base implements RenderedComponent {
-    DEFAULT_STATE: ObjectState = {
+    private static DEFAULT_STATE: Readonly<BaseState> = {
         image: null,
         sourceX: 0,
         sourceY: 0,
@@ -15,10 +19,21 @@ export class Base implements RenderedComponent {
         destW: 336,
         destH: 112,
     };
-    private _state: ObjectState = this.DEFAULT_STATE;
+    private _state: BaseState = Base.DEFAULT_STATE;
 
-    get state(): ObjectState {
+    constructor() {
+        this.resetState();
+    }
+
+    get state(): BaseState {
         return this._state;
+    }
+
+    resetState(): void {
+        ObjectUtil.copyTo(
+            this._state as Record<string, never>,
+            Base.DEFAULT_STATE as Record<string, never>,
+        );
     }
 
     render(ctx: CanvasRenderingContext2D | null): void {

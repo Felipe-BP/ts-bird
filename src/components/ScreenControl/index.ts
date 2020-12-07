@@ -30,13 +30,17 @@ abstract class GameController {
             let collision = false;
             if (this.screenController.pipe.state.pipes) {
                 for (const pipe of this.screenController.pipe.state.pipes) {
-                    const pipeBaseY =
-                        pipe.y +
-                        this.screenController.pipe.state.destH +
-                        this.screenController.pipe.state.offset;
+                    const pipeHeadY =
+                        pipe.y + this.screenController.pipe.state.destH;
 
-                    if (birdX >= pipe.x) {
-                        if (birdHead <= -pipe.y || birdBase >= pipeBaseY) {
+                    const pipeBaseY =
+                        pipeHeadY + this.screenController.pipe.state.offset;
+
+                    if (
+                        birdX >= pipe.x &&
+                        birdX <= pipe.x + this.screenController.pipe.state.destW
+                    ) {
+                        if (birdHead <= pipeHeadY || birdBase >= pipeBaseY) {
                             collision = true;
                             break;
                         }

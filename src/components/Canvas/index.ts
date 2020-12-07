@@ -8,6 +8,11 @@ import type { TSBird } from '../TS-Bird';
 import type { Base } from '../Base';
 import type { Pipe } from '../Pipe';
 
+enum KeyboardKey {
+    SPACE = ' ',
+    ARROWUP = 'ArrowUp',
+}
+
 export default class Canvas extends Component {
     private _ctx: CanvasRenderingContext2D | null;
     private screenController: ScreenController;
@@ -34,6 +39,17 @@ export default class Canvas extends Component {
     private bindCanvasClick() {
         this.elem<HTMLCanvasElement>().onclick = () =>
             this.screenController.getControl()?.click();
+
+        window.onkeydown = (event: KeyboardEvent) => {
+            switch (event.key) {
+                case KeyboardKey.SPACE:
+                    this.screenController.getControl()?.click();
+                    break;
+                case KeyboardKey.ARROWUP:
+                    this.screenController.getControl()?.click();
+                    break;
+            }
+        };
     }
 
     private async drawComponents() {

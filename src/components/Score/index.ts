@@ -66,19 +66,25 @@ export class GameScore implements RenderedComponent {
     }
 
     async render(ctx: CanvasRenderingContext2D | null): Promise<void> {
-        const scoreImages = this.parseScore2ScoreImages();
+        const scoreImages = this.parseScore2ScoreImages(); // TODO optimize to only execute on score change
+        const imagesPromises = [];
         this._state.scoreImages2Render = [];
 
         for (const scoreImage of scoreImages) {
             const score = new Image();
             score.src = scoreImage as string;
-            new Promise((resolve) => {
-                score.onload = () => {
-                    this._state.scoreImages2Render.push(score);
-                    resolve(this.drawOnCanvas(ctx));
-                };
-            });
+            imagesPromises.push(
+                new Promise((resolve) => {
+                    score.onload = () => {
+                        this._state.scoreImages2Render.push(score);
+                        resolve(null);
+                    };
+                }),
+            );
         }
+
+        await Promise.all(imagesPromises);
+        this.drawOnCanvas(ctx);
     }
 
     private parseScore2ScoreImages(): Array<string | CanvasImageSource> {
@@ -91,19 +97,22 @@ export class GameScore implements RenderedComponent {
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D | null): void {
-        for (const scoreImage of this._state.scoreImages2Render) {
+        const xAvgWidthScore = (this._state.scoreImages2Render.length * 24) / 2;
+        this._state.destX = 144 - xAvgWidthScore;
+        this._state.scoreImages2Render.forEach((scoreImage, index) => {
+            const offset = index !== 0 ? index * 24 : 0;
             return ctx?.drawImage(
                 scoreImage as CanvasImageSource,
                 this.state.sourceX,
                 this.state.sourceY,
                 this.state.sourceW,
                 this.state.sourceH,
-                this.state.destX,
+                this.state.destX + offset,
                 this.state.destY,
                 this.state.destW,
                 this.state.destH,
             );
-        }
+        });
     }
 
     update(): void {

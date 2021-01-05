@@ -6,7 +6,7 @@ import type { RenderedComponent } from '../../interfaces/rendered-component.inte
 
 import PipeImage from '../../assets/sprites/pipe-green.png';
 
-type PipePosition = {
+export type PipePosition = {
     x: number;
     y: number;
 };

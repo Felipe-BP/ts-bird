@@ -1,6 +1,6 @@
 import { CollisionEvents, CollisionUtil } from '../../utils/collision.util';
 import type { Base } from '../Base';
-import type { Pipe } from '../Pipe';
+import type { Pipe, PipePosition } from '../Pipe';
 import type { GameScore } from '../Score';
 import type { TSBird } from '../TS-Bird';
 
@@ -10,6 +10,7 @@ export enum Screens {
 }
 
 abstract class GameController {
+    protected scoredPipe: PipePosition | null = null;
     constructor(protected screenController: ScreenController) {
         this.screenController = screenController;
 
@@ -42,14 +43,31 @@ abstract class GameController {
                         if (birdHead <= pipeHeadY || birdBase >= pipeBaseY) {
                             collision = true;
                             break;
-                        } else {
-                            this.screenController.score.update();
                         }
                     }
                 }
             }
 
             return collision;
+        });
+
+        CollisionUtil.applyCollisionDetector(CollisionEvents.BIRD_SCORE, () => {
+            const birdX = this.screenController.bird.state.destX;
+            const [currentPipe] = this.screenController.pipe.state
+                .pipes as PipePosition[];
+            const alreadyScoredPipe = this.scoredPipe === currentPipe;
+
+            let scored = false;
+            if (
+                currentPipe &&
+                !alreadyScoredPipe &&
+                birdX > currentPipe.x + this.screenController.pipe.state.destW
+            ) {
+                scored = true;
+                this.scoredPipe = currentPipe;
+            }
+
+            return scored;
         });
     }
 
@@ -128,11 +146,20 @@ export class GameScreen extends GameController {
     constructor(screenController: ScreenController) {
         super(screenController);
 
-        CollisionUtil._collision$.subscribe(() => {
-            this.screenController.bird.resetState();
-            this.screenController.pipe.resetState();
-            this.screenController.score.resetState();
-            this.screenController.changeScreen(Screens.START);
+        CollisionUtil._collision$.subscribe((event) => {
+            switch (event) {
+                case CollisionEvents.BIRD_SCORE:
+                    this.screenController.score.update();
+                    break;
+
+                default:
+                    this.scoredPipe = null;
+                    this.screenController.bird.resetState();
+                    this.screenController.pipe.resetState();
+                    this.screenController.score.resetState();
+                    this.screenController.changeScreen(Screens.START);
+                    break;
+            }
         });
     }
 

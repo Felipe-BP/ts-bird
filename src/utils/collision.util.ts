@@ -3,6 +3,7 @@ import { Subject } from '../services/Subject';
 export enum CollisionEvents {
     BIRD_BASE = 'BIRD_BASE',
     BIRD_PIPE = 'BIRD_PIPE',
+    BIRD_SCORE = 'BIRD_SCORE',
 }
 
 type CollisionFunction = () => boolean;

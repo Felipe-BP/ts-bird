@@ -1,6 +1,7 @@
 import { CollisionEvents, CollisionUtil } from '../../utils/collision.util';
 import type { Base } from '../Base';
 import type { Pipe } from '../Pipe';
+import type { GameScore } from '../Score';
 import type { TSBird } from '../TS-Bird';
 
 export enum Screens {
@@ -9,9 +10,7 @@ export enum Screens {
 }
 
 abstract class GameController {
-    protected screenController: ScreenController;
-
-    constructor(screenController: ScreenController) {
+    constructor(protected screenController: ScreenController) {
         this.screenController = screenController;
 
         CollisionUtil.applyCollisionDetector(CollisionEvents.BIRD_BASE, () => {
@@ -43,6 +42,8 @@ abstract class GameController {
                         if (birdHead <= pipeHeadY || birdBase >= pipeBaseY) {
                             collision = true;
                             break;
+                        } else {
+                            this.screenController.score.update();
                         }
                     }
                 }
@@ -60,24 +61,17 @@ abstract class GameController {
 export class ScreenController {
     private _currentScreen = Screens.START;
     private gameStateMap = new Map<Screens, GameController>();
-    public _ctx: Readonly<CanvasRenderingContext2D | null>;
-    public base: Readonly<Base>;
-    public bird: Readonly<TSBird>;
-    public pipe: Readonly<Pipe>;
 
     constructor(
-        context: CanvasRenderingContext2D | null,
-        bird: TSBird,
-        base: Base,
-        pipe: Pipe,
+        public _ctx: Readonly<CanvasRenderingContext2D | null>,
+        public bird: Readonly<TSBird>,
+        public base: Readonly<Base>,
+        public pipe: Readonly<Pipe>,
+        public score: Readonly<GameScore>,
     ) {
         for (const screen of Object.values(Screens)) {
             this.gameStateMap.set(screen, this.factoryGameController(screen));
         }
-        this._ctx = context;
-        this.bird = bird;
-        this.base = base;
-        this.pipe = pipe;
     }
 
     private factoryGameController(screen: Screens): GameController {
@@ -137,6 +131,7 @@ export class GameScreen extends GameController {
         CollisionUtil._collision$.subscribe(() => {
             this.screenController.bird.resetState();
             this.screenController.pipe.resetState();
+            this.screenController.score.resetState();
             this.screenController.changeScreen(Screens.START);
         });
     }
@@ -156,6 +151,7 @@ export class GameScreen extends GameController {
         this.update();
         this.screenController.bird.render(this.screenController._ctx);
         this.screenController.pipe.render(this.screenController._ctx);
+        this.screenController.score.render(this.screenController._ctx);
         this.screenController.base.render(this.screenController._ctx);
     }
 }

@@ -7,6 +7,7 @@ import { FrameRateUtil } from '../../utils/frame-rate.util';
 import type { TSBird } from '../TS-Bird';
 import type { Base } from '../Base';
 import type { Pipe } from '../Pipe';
+import type { GameScore } from '../Score';
 
 enum KeyboardKey {
     SPACE = ' ',
@@ -17,7 +18,7 @@ export default class Canvas extends Component {
     private _ctx: CanvasRenderingContext2D | null;
     private screenController: ScreenController;
 
-    constructor(bird: TSBird, base: Base, pipe: Pipe) {
+    constructor(bird: TSBird, base: Base, pipe: Pipe, score: GameScore) {
         super(
             `
                 <canvas class="game-container"></canvas>
@@ -30,6 +31,7 @@ export default class Canvas extends Component {
             bird,
             base,
             pipe,
+            score,
         );
         this.bindCanvasClick();
         this.setCanvasSize(288, 512);
@@ -56,7 +58,7 @@ export default class Canvas extends Component {
         this.renderBackground();
         this.screenController.getControl()?.render();
 
-        requestAnimationFrame(this.drawComponents.bind(this));
+        requestAnimationFrame(() => this.drawComponents());
         FrameRateUtil.updateFrame();
     }
 
